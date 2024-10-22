@@ -39,6 +39,8 @@ function renderItems(itemToRender) {
         // productItem.className = "product-item"
         productItem.style.display = "flex";
         productItem.style.listStyleType = "none";
+        productItem.style.paddingTop = "16px";
+        productItem.style.paddingBottom = "16px";
 
 
         //สร้าง tag ลูกตัวที่ 1 สำหรับทำ checkbox
@@ -77,8 +79,8 @@ function renderItems(itemToRender) {
     });
 }
 
+let selectedItems = [];
 addToCartBtn.addEventListener("click", () => {
-    let selectedItems = [];
     items.forEach((item) => {  //วนลูปตรวจสอบ checkbox ของสินค้าทั้งหมด
         const selectedProduct = document.getElementById(`item_${item.id}`);
         console.log(selectedProduct)
@@ -86,13 +88,52 @@ addToCartBtn.addEventListener("click", () => {
         if (selectedProduct.checked) {
             selectedItems.push(item); //ถ้าถูกเลือก เพิ่มโปรดักเข้าไปในรายการที่เลือก
         }
+        renderAddToCart(selectedItems)
     });
     // console.log(selectedItems); //แสดงรายการสินค้าที่ถูกเลือก
 });
   
-// function renderAddToCart(itemAddToCart) {
-//     productCartItem.innerHTML = ""
+function renderAddToCart(itemAddToCart) {
+    productCartItem.innerHTML = "";
+    itemAddToCart.forEach((selectedItems) => {
 
-// }
+        const productItem = document.createElement("li");
+        productItem.style.display = "flex";
+        productItem.style.listStyleType = "none";
+        productItem.style.paddingTop = "16px";
+        productItem.style.paddingBottom = "16px";
+
+        const productImg = document.createElement("img");
+        productImg.setAttribute("src", selectedItems.url)
+        productImg.setAttribute("width", "204")
+        productImg.setAttribute("height", "204")
+        productItem.appendChild(productImg);
+
+        const productInfo = document.createElement("div");
+        productInfo.style.marginLeft = "24px";
+ 
+        const productName = document.createElement("h1");
+        productName.innerHTML = `${selectedItems.name}`;
+        productInfo.appendChild(productName);
+
+        const productPrice = document.createElement("h3");
+        productPrice.innerHTML = `฿ ${selectedItems.price}`;
+        productInfo.appendChild(productPrice);
+
+        const deleteBtn = document.createElement("button");
+		deleteBtn.textContent = "Delete";
+		deleteBtn.addEventListener("click", () => deleteProduct(selectedItems.id));
+		productInfo.appendChild(deleteBtn);
+
+        productItem.appendChild(productInfo);
+        productCartItem.appendChild(productItem);
+    });
+
+    function deleteProduct(id) {
+        // console.log(selectedItems)
+		selectedItems = selectedItems.filter((i) => i.id !== id);
+		renderAddToCart(selectedItems);
+	};
+}
 
 
